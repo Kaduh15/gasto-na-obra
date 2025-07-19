@@ -3,6 +3,7 @@ import { Statistics } from './components/Statistics';
 import { FormAddExpense } from './components/FormAddExpense';
 import { ExpenseStats } from './components/ExpenseStats';
 import type { Expense } from './types/Expense';
+import { ExpenseChart } from './components/ExpenseChart';
 
 const expenses: Expense[] = [
   { id: 1, description: 'Material', amount: 200, category: 'material', date: new Date().toISOString() },
@@ -29,6 +30,7 @@ function App() {
       <Statistics />
       <FormAddExpense />
       <ExpenseStats expenses={expenses} />
+      <ExpenseChart expenses={expenses} />
     </main>
   );
 }
