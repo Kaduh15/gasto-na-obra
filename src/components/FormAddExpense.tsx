@@ -1,18 +1,18 @@
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 
-const categories = [
-  "Material de Construção",
-  "Mão de Obra",
-  "Ferramentas",
-  "Elétrica",
-  "Hidráulica",
-  "Pintura",
-  "Acabamento",
-  "Transporte",
-  "Alimentação",
-  "Outros"
-];
+const categories = {
+  material: "Material de Construção",
+  mao_obra: "Mão de Obra",
+  ferramentas: "Ferramentas",
+  eletrica: "Elétrica",
+  hidraulica: "Hidráulica",
+  pintura: "Pintura",
+  acabamento: "Acabamento",
+  transporte: "Transporte",
+  alimentacao: "Alimentação",
+  outros: "Outros"
+};
 
 export function FormAddExpense() {
   const [openForm, setOpenForm] = useState(false);
@@ -46,8 +46,8 @@ export function FormAddExpense() {
             <label className="block text-gray-700 mb-2 font-semibold">Categoria</label>
             <select className="w-full border border-gray-300 rounded px-3 py-2">
               <option value="">Selecione uma categoria</option>
-              {categories.map((category, index) => (
-                <option key={index} value={category}>{category}</option>
+              {Object.entries(categories).map(([key, label]) => (
+                <option key={key} value={key}>{label}</option>
               ))}
             </select>
           </div>
