@@ -1,54 +1,120 @@
 import { categories } from "@/types/categories";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Save } from "lucide-react";
 import { useState } from "react";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import { Input } from "./ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+
+const ExpenseSchema = z
 
 
 export function FormAddExpense() {
   const [openForm, setOpenForm] = useState(false);
+  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [category, setCategory] = useState<keyof typeof categories>("material");
 
   function toggleForm() {
     setOpenForm(!openForm);
   }
 
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    console.log("Gasto adicionado");
+    setOpenForm(false);
+  }
+
   const formButtonText = openForm ? "Cancelar" : "Adicionar Gasto";
   const ButtonIcon = openForm ? Minus : Plus;
 
-  return (
-    <div className="flex flex-col items-center justify-center w-full max-w-3xl mx-auto p-6 mb-8">
-      <button onClick={toggleForm} className="flex items-center gap-2 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 text-white px-4 py-2 rounded-xl transition-colors">
-        {<ButtonIcon size={20} />}
+  if (!openForm) {
+    return (
+      <Button
+        onClick={toggleForm}
+        className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-3 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+      >
+        <ButtonIcon className="h-5 w-5 mr-2" />
         {formButtonText}
-      </button>
+      </Button>
+    )
+  }
 
-      {openForm && (
-        <form className="mt-8 p-6 shadow-md mb-16 bg-white rounded-xl w-full">
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2 font-semibold">Descrição do Gasto</label>
-            <textarea className="w-full border h-24 border-gray-300 rounded px-3 py-2" placeholder="Ex: Compra de cimento" />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2 font-semibold">Valor (R$)</label>
-            <input type="number" className="w-full border border-gray-300 rounded px-3 py-2" placeholder="Ex: 150.00" />
+
+
+  return (
+    <Card className="bg-white/90 backdrop-blur-sm shadow-xl border-0">
+      <CardHeader>
+        <CardTitle className="text-xl text-gray-800">Adicionar Novo Gasto</CardTitle>
+        <CardDescription>
+          Registre um novo gasto da sua obra para manter o controle financeiro
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="description" className="text-sm font-medium text-gray-700">
+                Descrição do Gasto
+              </Label>
+              <Textarea
+                id="description"
+                placeholder="Ex: Cimento, Areia, Pedreiro, etc."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="resize-none h-20"
+                required
+              />
+            </div>
+
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount" className="text-sm font-medium text-gray-700">
+                  Valor (R$)
+                </Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  step="0.01"
+                  placeholder="0,00"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="text-lg"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="category" className="text-sm font-medium text-gray-700">
+                  Categoria
+                </Label>
+                <Select value={category} onValueChange={setCategory} required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione uma categoria" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(categories).map(([key, label]) => (
+                      <SelectItem key={key} value={key}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2 font-semibold">Categoria</label>
-            <select className="w-full border border-gray-300 rounded px-3 py-2">
-              <option value="">Selecione uma categoria</option>
-              {Object.entries(categories).map(([key, label]) => (
-                <option key={key} value={key}>{label}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2 font-semibold">Data do Gasto</label>
-            <input type="date" className="w-full border border-gray-300 rounded px-3 py-2" />
-          </div>
-
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">Adicionar</button>
+          <Button
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+          >
+            <Save className="h-5 w-5 mr-2" />
+            Salvar Gasto
+          </Button>
         </form>
-      )}
-    </div>
+      </CardContent>
+    </Card>
   );
 }

@@ -41,7 +41,7 @@ const expenses: Expense[] = [
 
 function App() {
   return (
-    <main>
+    <main className='flex flex-col gap-8 pb-8'>
       <Header />
       <Statistics />
       <FormAddExpense />
