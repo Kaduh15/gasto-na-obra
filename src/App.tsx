@@ -4,6 +4,7 @@ import { FormAddExpense } from './components/FormAddExpense';
 import { ExpenseStats } from './components/ExpenseStats';
 import type { Expense } from './types/Expense';
 import { ExpenseChart } from './components/ExpenseChart';
+import { ExpenseList } from './components/ExpenseList';
 
 const expenses: Expense[] = [
   {
@@ -31,9 +32,9 @@ const expenses: Expense[] = [
     id: 4,
     description: "Compra de tinta",
     amount: 80.00,
-    category: "pintura",
+    category: "mao_de_obra",
     date: "2023-10-04"
-  }, 
+  },
 ];
 
 
@@ -46,6 +47,7 @@ function App() {
       <FormAddExpense />
       <ExpenseStats expenses={expenses} />
       <ExpenseChart expenses={expenses} />
+      <ExpenseList expenses={expenses} onDeleteExpense={() => {}} />
     </main>
   );
 }
