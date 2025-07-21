@@ -32,7 +32,7 @@ export const ExpenseChart = ({ expenses }: ExpenseChartProps) => {
     percentage: ((amount / expenses.reduce((total, expense) => total + expense.amount, 0)) * 100).toFixed(1)
   }));
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: { name: string; value: number; percentage: string } }> }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
