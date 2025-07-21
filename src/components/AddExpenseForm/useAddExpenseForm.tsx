@@ -1,6 +1,11 @@
+import { addExpense } from "@/database/functions/addExpense";
 import { categories } from "@/types/categories";
 import { useState } from "react";
 import z from "zod";
+
+type useAddExpenseFormProps = {
+  addSuccess?: () => void;
+};
 
 export const ExpenseSchema = z.object({
   description: z.string().min(1, "Descrição é obrigatória"),
@@ -13,7 +18,9 @@ export const ExpenseSchema = z.object({
 
 export type ExpenseData = z.infer<typeof ExpenseSchema>;
 
-export function useAddExpenseForm() {
+export function useAddExpenseForm({
+  addSuccess = () => { }
+}: useAddExpenseFormProps) {
   const [openForm, setOpenForm] = useState(false);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(0);
@@ -29,14 +36,21 @@ export function useAddExpenseForm() {
     setOpenForm(!openForm);
   }
 
-  function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     const parsedData = ExpenseSchema.safeParse(expenseData);
     if (!parsedData.success) {
       console.error("Erro de validação:", parsedData.error);
       return;
     }
-    console.log("Gasto adicionado:", expenseData);
+
+    await addExpense(parsedData.data)
+
+    setDescription("");
+    setAmount(0);
+    setCategory("material");
+    console.log("Gasto adicionado com sucesso:", parsedData.data);
+    addSuccess();
     setOpenForm(false);
   }
 

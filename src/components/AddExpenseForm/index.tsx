@@ -8,7 +8,11 @@ import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useAddExpenseForm } from "./useAddExpenseForm";
 
-export function FormAddExpense() {
+type FormAddExpenseProps = {
+  onAddExpense?: () => void;
+};
+
+export function FormAddExpense({ onAddExpense = () => { } }: FormAddExpenseProps) {
   const {
     openForm,
     toggleForm,
@@ -19,7 +23,7 @@ export function FormAddExpense() {
     category,
     setCategory,
     handleSubmit
-  } = useAddExpenseForm();
+  } = useAddExpenseForm({ addSuccess: onAddExpense });
 
   const formButtonText = openForm ? "Cancelar" : "Adicionar Gasto";
   const ButtonIcon = openForm ? Minus : Plus;
