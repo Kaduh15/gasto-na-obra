@@ -1,31 +1,25 @@
-import { categories } from "@/types/categories";
+import { categories, type CategoryKey } from "@/types/categories";
 import { Minus, Plus, Save } from "lucide-react";
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
-import { Input } from "./ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-
-const ExpenseSchema = z
-
+import { Button } from "../ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
+import { Input } from "../ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useAddExpenseForm } from "./useAddExpenseForm";
 
 export function FormAddExpense() {
-  const [openForm, setOpenForm] = useState(false);
-  const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState(0);
-  const [category, setCategory] = useState<keyof typeof categories>("material");
-
-  function toggleForm() {
-    setOpenForm(!openForm);
-  }
-
-  function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    console.log("Gasto adicionado");
-    setOpenForm(false);
-  }
+  const {
+    openForm,
+    toggleForm,
+    description,
+    setDescription,
+    amount,
+    setAmount,
+    category,
+    setCategory,
+    handleSubmit
+  } = useAddExpenseForm();
 
   const formButtonText = openForm ? "Cancelar" : "Adicionar Gasto";
   const ButtonIcon = openForm ? Minus : Plus;
@@ -80,7 +74,7 @@ export function FormAddExpense() {
                   step="0.01"
                   placeholder="0,00"
                   value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={(e) => setAmount(e.target.valueAsNumber)}
                   className="text-lg"
                   required
                 />
@@ -90,7 +84,7 @@ export function FormAddExpense() {
                 <Label htmlFor="category" className="text-sm font-medium text-gray-700">
                   Categoria
                 </Label>
-                <Select value={category} onValueChange={setCategory} required>
+                <Select value={category} onValueChange={(value) => setCategory(value as CategoryKey)} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione uma categoria" />
                   </SelectTrigger>

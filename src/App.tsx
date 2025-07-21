@@ -1,6 +1,6 @@
 import { Header } from './components/Header';
 import { Statistics } from './components/Statistics';
-import { FormAddExpense } from './components/FormAddExpense';
+import { FormAddExpense } from './components/AddExpenseForm';
 import { ExpenseStats } from './components/ExpenseStats';
 import type { Expense } from './types/Expense';
 import { ExpenseChart } from './components/ExpenseChart';
@@ -47,7 +47,7 @@ function App() {
       <FormAddExpense />
       <ExpenseStats expenses={expenses} />
       <ExpenseChart expenses={expenses} />
-      <ExpenseList expenses={expenses} onDeleteExpense={() => {}} />
+      <ExpenseList expenses={expenses} onDeleteExpense={() => { }} />
     </main>
   );
 }
