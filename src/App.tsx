@@ -43,7 +43,7 @@ function App() {
   return (
     <main className='flex flex-col gap-8 pb-8'>
       <Header />
-      <Statistics />
+      <Statistics expenses={expenses} />
       <FormAddExpense />
       <ExpenseStats expenses={expenses} />
       <ExpenseChart expenses={expenses} />
