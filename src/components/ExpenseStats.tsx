@@ -22,23 +22,11 @@ const categoryIcons: Record<CategoryKey, React.ReactNode> = {
 };
 
 export function ExpenseStats({ expenses }: ExpenseProps) {
-  const initialCategoryTotals: Record<CategoryKey, number> = {
-    material: 0,
-    mao_de_obra: 0,
-    ferramentas: 0,
-    eletrica: 0,
-    hidraulica: 0,
-    pintura: 0,
-    acabamento: 0,
-    transporte: 0,
-    alimentacao: 0,
-    outros: 0,
-  };
 
-  const ExpensesByCategoties = expenses.reduce<Record<CategoryKey, number>>((acc, expense) => {
-    acc[expense.category] += expense.amount;
+  const ExpensesByCategoties = expenses.reduce<Partial<Record<CategoryKey, number>>>((acc, expense) => {
+    acc[expense.category] = (acc[expense.category] ?? 0) + expense.amount;
     return acc;
-  }, initialCategoryTotals);
+  }, {});
 
   const totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 
