@@ -10,7 +10,7 @@ export type ExpenseProps = {
 
 const categoryIcons: Record<CategoryKey, React.ReactNode> = {
   material: <Package className="h-4 w-4 text-orange-600" />,
-  mao_de_obra: <Wrench className="h-4 w-4 text-blue" />,
+  mao_de_obra: <Wrench className="h-4 w-4 text-blue-600" />,
   ferramentas: <Drill className="h-4 w-4 text-green-600" />,
   eletrica: <PlugZap className="h-4 w-4 text-yellow-600" />,
   hidraulica: <Package className="h-4 w-4 text-purple-600" />,
@@ -32,7 +32,7 @@ export function ExpenseStats({ expenses }: ExpenseProps) {
 
   return (
     <>
-      <Card className="bg-white/90 backdrop-blur-sm shadow-xl border-0">
+      <Card className="bg-white/90 backdrop-blur-sm shadow-xl border-0 mb-8">
         <CardHeader>
           <CardTitle className="text-xl text-gray-800 flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-orange-600" />
