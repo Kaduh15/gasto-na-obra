@@ -1,18 +1,7 @@
+import { categories } from "@/types/categories";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 
-const categories = {
-  material: "Material de Construção",
-  mao_obra: "Mão de Obra",
-  ferramentas: "Ferramentas",
-  eletrica: "Elétrica",
-  hidraulica: "Hidráulica",
-  pintura: "Pintura",
-  acabamento: "Acabamento",
-  transporte: "Transporte",
-  alimentacao: "Alimentação",
-  outros: "Outros"
-};
 
 export function FormAddExpense() {
   const [openForm, setOpenForm] = useState(false);

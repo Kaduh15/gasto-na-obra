@@ -2,14 +2,15 @@ import type { Expense } from "@/types/Expense";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Car, Drill, Package, PaintRoller, Pizza, PlugZap, TrendingUp, Wrench } from "lucide-react";
 import { Badge } from "./ui/badge";
+import { categories, type CategoryKey } from "@/types/categories";
 
 export type ExpenseProps = {
   expenses: Expense[];
 };
 
-const categoryIcons: Record<string, React.ReactNode> = {
+const categoryIcons: Record<CategoryKey, React.ReactNode> = {
   material: <Package className="h-4 w-4 text-orange-600" />,
-  mao_de_Obra: <Wrench className="h-4 w-4 text-blue" />,
+  mao_de_obra: <Wrench className="h-4 w-4 text-blue" />,
   ferramentas: <Drill className="h-4 w-4 text-green-600" />,
   eletrica: <PlugZap className="h-4 w-4 text-yellow-600" />,
   hidraulica: <Package className="h-4 w-4 text-purple-600" />,
@@ -21,14 +22,23 @@ const categoryIcons: Record<string, React.ReactNode> = {
 };
 
 export function ExpenseStats({ expenses }: ExpenseProps) {
-  const ExpensesByCategoties = expenses.reduce<Record<string, number>>((acc, expense) => {
-    if (!acc[expense.category]) {
-      acc[expense.category] = expense.amount;
-    }
+  const initialCategoryTotals: Record<CategoryKey, number> = {
+    material: 0,
+    mao_de_obra: 0,
+    ferramentas: 0,
+    eletrica: 0,
+    hidraulica: 0,
+    pintura: 0,
+    acabamento: 0,
+    transporte: 0,
+    alimentacao: 0,
+    outros: 0,
+  };
 
-    acc[expense.category]
+  const ExpensesByCategoties = expenses.reduce<Record<CategoryKey, number>>((acc, expense) => {
+    acc[expense.category] += expense.amount;
     return acc;
-  }, {});
+  }, initialCategoryTotals);
 
   const totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 
@@ -48,13 +58,12 @@ export function ExpenseStats({ expenses }: ExpenseProps) {
           <div className="space-y-4">
             {Object.entries(ExpensesByCategoties).map(([category, amount]) => {
               const percentage = ((amount / totalAmount) * 100).toFixed(1);
-              console.log("🚀 ~ {Object.entries ~ percentage:", percentage)
               return (
                 <div key={category} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      {categoryIcons[category] || <Package className="h-4 w-4" />}
-                      <span className="font-medium text-gray-700">{category}</span>
+                      {categoryIcons[category as CategoryKey] || <Package className="h-4 w-4" />}
+                      <span className="font-medium text-gray-700">{categories[category as CategoryKey]}</span>
                     </div>
                     <Badge variant={"secondary"} className="bg-blue-50 text-blue-700">
                       {percentage}%
