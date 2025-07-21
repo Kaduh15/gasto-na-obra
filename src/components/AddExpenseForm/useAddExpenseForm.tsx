@@ -1,68 +1,68 @@
+import { useState, useCallback } from "react";
 import { addExpense } from "@/database/functions/addExpense";
 import { categories } from "@/types/categories";
-import { useState } from "react";
-import z from "zod";
-
-type useAddExpenseFormProps = {
-  addSuccess?: () => void;
-};
-
-export const ExpenseSchema = z.object({
-  description: z.string().min(1, "Descrição é obrigatória"),
-  amount: z.number().min(0.01, "Valor deve ser maior que zero"),
-  category: z.enum(Object.keys(categories) as [keyof typeof categories]),
-}).transform((data) => ({
-  ...data,
-  data: new Date().toISOString().split("T")[0], // Adiciona a data atual no formato YYYY-MM-DD;
-}));
-
-export type ExpenseData = z.infer<typeof ExpenseSchema>;
+import { ExpenseSchema, type UseAddExpenseFormProps } from "./types";
+import { DEFAULT_CATEGORY } from "./constants";
 
 export function useAddExpenseForm({
-  addSuccess = () => { }
-}: useAddExpenseFormProps) {
+  addSuccess = () => {}
+}: UseAddExpenseFormProps = {}) {
   const [openForm, setOpenForm] = useState(false);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(0);
-  const [category, setCategory] = useState<keyof typeof categories>("material");
+  const [category, setCategory] = useState<keyof typeof categories>(DEFAULT_CATEGORY);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const expenseData = {
-    description,
-    amount: amount,
-    category,
-  };
+  const toggleForm = useCallback(() => {
+    setOpenForm(prev => !prev);
+  }, []);
 
-  function toggleForm() {
-    setOpenForm(!openForm);
-  }
-
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    const parsedData = ExpenseSchema.safeParse(expenseData);
-    if (!parsedData.success) {
-      console.error("Erro de validação:", parsedData.error);
-      return;
-    }
-
-    await addExpense(parsedData.data)
-
+  const resetForm = useCallback(() => {
     setDescription("");
     setAmount(0);
-    setCategory("material");
-    console.log("Gasto adicionado com sucesso:", parsedData.data);
-    addSuccess();
-    setOpenForm(false);
-  }
+    setCategory(DEFAULT_CATEGORY);
+  }, []);
+
+  const handleSubmit = useCallback(async (event: React.FormEvent) => {
+    event.preventDefault();
+    
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      const expenseData = { description, amount, category };
+      const parsedData = ExpenseSchema.safeParse(expenseData);
+      
+      if (!parsedData.success) {
+        console.error("Erro de validação:", parsedData.error);
+        return;
+      }
+
+      await addExpense(parsedData.data);
+      
+      resetForm();
+      console.log("Gasto adicionado com sucesso:", parsedData.data);
+      addSuccess();
+      setOpenForm(false);
+    } catch (error) {
+      console.error("Erro ao adicionar gasto:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [description, amount, category, isSubmitting, addSuccess, resetForm]);
 
   return {
     openForm,
-    toggleForm,
     description,
-    setDescription,
     amount,
-    setAmount,
     category,
+    isSubmitting,
+    toggleForm,
+    setDescription,
+    setAmount,
     setCategory,
     handleSubmit,
+    resetForm,
   };
 }

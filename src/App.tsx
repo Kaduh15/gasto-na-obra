@@ -7,6 +7,7 @@ import { ExpenseChart } from './components/ExpenseChart';
 import { ExpenseList } from './components/ExpenseList';
 import { useEffect, useState } from 'react';
 import { getAllExpenses } from './database/functions/getAllExpenses';
+import { deleteExpense } from './database/functions/deleteExpense';
 
 
 function App() {
@@ -16,6 +17,15 @@ function App() {
     const data = await getAllExpenses()
 
     setExpenses(data);
+  }
+
+  async function handleDeleteExpense(id: number) {
+    try {
+      await deleteExpense(id);
+      await fetchExpenses();
+    } catch (error) {
+      console.error('Erro ao deletar gasto:', error);
+    }
   }
 
   useEffect(() => {
@@ -29,7 +39,7 @@ function App() {
       <FormAddExpense onAddExpense={fetchExpenses}/>
       <ExpenseStats expenses={expenses} />
       <ExpenseChart expenses={expenses} />
-      <ExpenseList expenses={expenses} onDeleteExpense={() => { }} />
+      <ExpenseList expenses={expenses} onDeleteExpense={handleDeleteExpense} />
     </main>
   );
 }
