@@ -21,8 +21,6 @@ Uma aplicação web moderna para gerenciar e controlar os gastos de obras de con
 
 <div align="center">
   <img src="./screenshots/home.png" width="300" alt="Dashboard Mobile">
-  <img src="./screenshots/form.png" width="300" alt="Formulário Mobile">
-  <img src="./screenshots/chart.png" width="300" alt="Gráficos Mobile">
   <img src="./screenshots/list.png" width="300" alt="Lista Mobile">
 </div>
 
